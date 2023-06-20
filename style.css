@@ -89,7 +89,7 @@
   border: none;
   background-color: transparent;
   padding: 0;
-  background: transparent url('../icon/edit.svg') center/contain no-repeat;
+  background: transparent url('./src/icons/edit.svg') center/contain no-repeat;
 
 }
 
@@ -108,7 +108,7 @@
 .widget__other {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  align-items: top;
+  align-items: flex-start;
   gap: 10px;
   margin-bottom: 15px;
 }
