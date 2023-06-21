@@ -1,3 +1,5 @@
+const addZero = (n) => n < 10 ? `0${n}` : n;
+
 export const getCurrentDateTime = () => {
   const months = [
     'янв',
@@ -25,25 +27,44 @@ export const getCurrentDateTime = () => {
 
   const date = new Date()
 
-  let dayOfMonth = date.getDate()
+  const dayOfMonth = addZero(date.getDate())
   const month = months[date.getMonth()]
   const year = date.getFullYear()
   const dayOfMWeek = weekDays[date.getDay()]
 
-  let hours = date.getHours()
-  let minutes = date.getMinutes()
+  const hours = addZero(date.getHours())
+  const minutes = addZero(date.getMinutes())
 
-  if (hours < 10) {
-    hours = `0${hours}`
+  return {dayOfMonth, month, year, hours, minutes, dayOfMWeek}
+}
+
+export const getWindDirectionSymbol = (deg) => {
+  let windDirection = ''
+  if (deg >= 337.5 || deg < 22.5) {
+    windDirection = '↑';
+  } else if (deg >= 22.5 && deg < 67.5) {
+    windDirection = '↗';
+  } else if (deg >= 67.5 && deg < 112.5) {
+    windDirection = '→';
+  } else if (deg >= 112.5 && deg < 157.5) {
+    windDirection = '↘';
+  } else if (deg >= 157.5 && deg < 202.5) {
+    windDirection = '↓';
+  } else if (deg >= 202.5 && deg < 247.5) {
+    windDirection = '↙';
+  } else if (deg >= 247.5 && deg < 292.5) {
+    windDirection = '←';
+  } else {
+    windDirection = '↖';
   }
+  return windDirection
+}
 
-  if (minutes < 10) {
-    minutes = `0${minutes}`
-  }
-
-  if (dayOfMonth < 10) {
-    dayOfMonth = `0${dayOfMonth}`
-  }
-
-  return { dayOfMonth, month, year, hours, minutes, dayOfMWeek }
+export const calculateDewPoint = (temperature, humidity) => {
+  temperature = temperature - 273.15
+  const a = 17.27;
+  const b = 237.7;
+  const alpha = ((a * temperature) / (b + temperature)) + Math.log(humidity / 100);
+  const dewPoint = (b * alpha) / (a - alpha);
+  return dewPoint.toFixed(2);
 }

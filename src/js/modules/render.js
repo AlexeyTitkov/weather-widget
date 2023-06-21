@@ -1,53 +1,54 @@
-import {getCurrentDateTime} from "./utils.js";
+import {getCurrentDateTime, getWindDirectionSymbol, calculateDewPoint} from "./utils.js";
 
-export const renderWidgetToday = (widget) => {
-  const currentDateTime = getCurrentDateTime();
-
+export const renderWidgetToday = (widget, data) => {
+  const { dayOfMonth, month, year, hours, minutes, dayOfMWeek } = getCurrentDateTime();
+  console.log(data);
   widget.insertAdjacentHTML(
     'beforeend',
     `
   <div class="widget__today">
     <div class="widget__date-block">
-      <p class="widget__date">${currentDateTime.dayOfMonth} ${currentDateTime.month} ${currentDateTime.year}</p>
-      <p class="widget__time">${currentDateTime.hours}:${currentDateTime.minutes}</p>
-      <p class="widget__day">${currentDateTime.dayOfMWeek}</p>
+      <p class="widget__date">${dayOfMonth} ${month} ${year}</p>
+      <p class="widget__time">${hours}:${minutes}</p>
+      <p class="widget__day">${dayOfMWeek}</p>
     </div>
     <div class="widget__icon">
-      <img class="widget__img" src="./src/icons/01d.svg" alt="Погода">
+      <img class="widget__img" src="./src/icons/${data.weather[0].icon}.svg" alt="Погода">
     </div>
     <div class="widget__wheather">
       <div class="widget__city">
-        <p>Калининград</p>
+        <p>${data.name}</p>
         <button class="widget__change-city" aria-label="Изменить город"></button>
       </div>
-      <p class="widget__temp-big">19.3°C</p>
+      <p class="widget__temp-big">${(data.main.temp - 273.15).toFixed(1)}°C</p>
       <p class="widget__felt">ощущается</p>
-      <p class="widget__temp-small">18.8 °C</p>
+      <p class="widget__temp-small">${(data.main.feels_like - 273.15).toFixed(1)}°C</p>
     </div>
   </div>
   `
   )
 };
 
-export const renderWidgetOther = (widget) => {
-
+export const renderWidgetOther = (widget, data) => {
+  const windDirection = getWindDirectionSymbol(data.wind.deg)
+  const dewPoint = calculateDewPoint(data.main.temp, data.main.humidity)
   widget.insertAdjacentHTML(
     'beforeend',
     `
   <div class="widget__other">
     <div class="widget__wind">
       <p class="widget__wind-title">Ветер</p>
-      <p class="widget__wind-speed">3.94 м/с</p>
-      <p class="widget__wind-text">&#8599;</p>
+      <p class="widget__wind-speed">${(data.wind.speed).toFixed(1)} м/с</p>
+      <p class="widget__wind-text">${windDirection}</p>
     </div>
     <div class="widget__humidity">
       <p class="widget__humidity-title">Влажность</p>
-      <p class="widget__humidity-value">27%</p>
-      <p class="widget__humidity-text">Т.Р: -0.2 °C</p>
+      <p class="widget__humidity-value">${data.main.humidity}%</p>
+      <p class="widget__humidity-text">Т.Р: ${dewPoint} °C</p>
     </div>
     <div class="widget__pressure">
       <p class="widget__pressure-title">Давление</p>
-      <p class="widget__pressure-value">768.32</p>
+      <p class="widget__pressure-value">${data.main.pressure}</p>
       <p class="widget__pressure-text">мм рт.ст.</p>
     </div>
   </div>
@@ -89,4 +90,9 @@ export const renderWidgetForecast = (widget) => {
   </ul>
   `
   )
+}
+
+export const showError = (widget, error) => {
+  widget.textContent = error.toString;
+  widget.classList.add('widget_error');
 }
