@@ -41,21 +41,21 @@ export const getCurrentDateTime = () => {
 export const getWindDirectionSymbol = (deg) => {
   let windDirection = ''
   if (deg >= 337.5 || deg < 22.5) {
-    windDirection = '↑';
+    windDirection = '↓ С';
   } else if (deg >= 22.5 && deg < 67.5) {
-    windDirection = '↗';
+    windDirection = '↙ СЗ';
   } else if (deg >= 67.5 && deg < 112.5) {
-    windDirection = '→';
+    windDirection = '← З';
   } else if (deg >= 112.5 && deg < 157.5) {
-    windDirection = '↘';
+    windDirection = '↖ СВ';
   } else if (deg >= 157.5 && deg < 202.5) {
-    windDirection = '↓';
+    windDirection = '↑ Ю';
   } else if (deg >= 202.5 && deg < 247.5) {
-    windDirection = '↙';
+    windDirection = '↗ ЮВ';
   } else if (deg >= 247.5 && deg < 292.5) {
-    windDirection = '←';
+    windDirection = '→ В';
   } else {
-    windDirection = '↖';
+    windDirection = '↘ ЮЗ';
   }
   return windDirection
 }
@@ -66,5 +66,5 @@ export const calculateDewPoint = (temperature, humidity) => {
   const b = 237.7;
   const alpha = ((a * temperature) / (b + temperature)) + Math.log(humidity / 100);
   const dewPoint = (b * alpha) / (a - alpha);
-  return dewPoint.toFixed(2);
+  return dewPoint.toFixed(1);
 }

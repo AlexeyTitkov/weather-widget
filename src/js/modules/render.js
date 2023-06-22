@@ -48,7 +48,7 @@ export const renderWidgetOther = (widget, data) => {
     </div>
     <div class="widget__pressure">
       <p class="widget__pressure-title">Давление</p>
-      <p class="widget__pressure-value">${data.main.pressure}</p>
+      <p class="widget__pressure-value">${(data.main.pressure * 0.75006).toFixed(1)}</p>
       <p class="widget__pressure-text">мм рт.ст.</p>
     </div>
   </div>
