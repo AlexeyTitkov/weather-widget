@@ -77,7 +77,6 @@ export const getWeatherForecastData = (data) => {
     ];
 
     const dayOfWeek = weekDaysShort[date.getDay()];
-    console.log(dayOfWeek);
 
     const weatherIcon = item.weather[0].icon;
 
