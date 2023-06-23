@@ -39,25 +39,9 @@ export const getCurrentDateTime = () => {
 }
 
 export const getWindDirectionSymbol = (deg) => {
-  let windDirection = ''
-  if (deg >= 337.5 || deg < 22.5) {
-    windDirection = '↓ С';
-  } else if (deg >= 22.5 && deg < 67.5) {
-    windDirection = '↙ СЗ';
-  } else if (deg >= 67.5 && deg < 112.5) {
-    windDirection = '← З';
-  } else if (deg >= 112.5 && deg < 157.5) {
-    windDirection = '↖ СВ';
-  } else if (deg >= 157.5 && deg < 202.5) {
-    windDirection = '↑ Ю';
-  } else if (deg >= 202.5 && deg < 247.5) {
-    windDirection = '↗ ЮВ';
-  } else if (deg >= 247.5 && deg < 292.5) {
-    windDirection = '→ В';
-  } else {
-    windDirection = '↘ ЮЗ';
-  }
-  return windDirection
+  const directions = ['↓ С', '↙ СВ', '← В', '↖ ЮВ', '↑ Ю', '↗ ЮЗ', '→ З', '↘ СЗ'];
+  const index = Math.round(deg / 45) % 8;
+  return directions[index];
 }
 
 export const calculateDewPoint = (temperature, humidity) => {
@@ -67,4 +51,63 @@ export const calculateDewPoint = (temperature, humidity) => {
   const alpha = ((a * temperature) / (b + temperature)) + Math.log(humidity / 100);
   const dewPoint = (b * alpha) / (a - alpha);
   return dewPoint.toFixed(1);
+}
+
+export const getWeatherForecastData = (data) => {
+
+  const forecast = data.list.filter((item) =>
+    new Date(item.dt_txt).getHours() === 12 &&
+    new Date(item.dt_txt).getDate() > new Date().getDate() &&
+    new Date(item.dt_txt).getDate() < new Date().getDate() + 5
+  );
+
+  const forecastData = forecast.map((item) => {
+
+    const date = new Date(item.dt_txt)
+
+
+    const weekDaysShort = [
+      'вc',
+      'пн',
+      'вт',
+      'ср',
+      'чт',
+      'пт',
+      'сб',
+    ];
+
+    const dayOfWeek = weekDaysShort[date.getDay()];
+    console.log(dayOfWeek);
+
+    const weatherIcon = item.weather[0].icon;
+
+    let minTemp = Infinity;
+    let maxTemp = -Infinity;
+
+    for (let i = 0; i < data.list.length; i++) {
+      const temp = data.list[i].main.temp;
+      const tempDate = new Date(data.list[i].dt_txt)
+
+      if (tempDate.getDate() === date.getDate()) {
+        if (temp < minTemp) {
+          minTemp = temp;
+        }
+
+        if (temp > maxTemp){
+          maxTemp = temp;
+        }
+      }
+    }
+
+    return {
+      dayOfWeek,
+      weatherIcon,
+      minTemp,
+      maxTemp,
+    }
+
+  })
+
+  return forecastData;
+
 }

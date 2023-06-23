@@ -1,5 +1,5 @@
 const API_URL = 'https://api.openweathermap.org/data/2.5/';
-const API_KEY = '9f19abcdbca7dfb8a16da935612e8051';
+const API_KEY = 'da55603c352f377de28b3ca9973b74f9';
 
 export const fetchWeather = async (city) => {
   try {
@@ -14,3 +14,15 @@ export const fetchWeather = async (city) => {
   }
 }
 
+export const fetchForecast = async (city) => {
+  try {
+    const response = await fetch(`${API_URL}forecast?q=${city}&appid=${API_KEY}&lang=ru`);
+    if (!response.ok) {
+      throw new Error("Ошибка запроса")
+    }
+    const data = await response.json();
+    return {success: true, data}
+  } catch (error) {
+    return {success: false, error}
+  }
+}
